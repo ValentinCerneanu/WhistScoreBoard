@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Whist Score Board</string>
+    <string name="number_of_players">How many players</string>
+</resources>
