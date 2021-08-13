@@ -21,7 +21,6 @@ class MainActivity : AppCompatActivity() {
         button4.setOnClickListener(listener)
         button5.setOnClickListener(listener)
         button6.setOnClickListener(listener)
-
     }
 
     val listener = View.OnClickListener { view ->
@@ -48,5 +47,4 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
 }

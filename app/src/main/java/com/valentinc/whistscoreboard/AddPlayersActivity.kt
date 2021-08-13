@@ -7,9 +7,14 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import com.valentinc.whistscoreboard.models.User
+import com.valentinc.whistscoreboard.services.DatabaseService
 
 
 class AddPlayersActivity : AppCompatActivity() {
+
+    private val editTextList = mutableListOf<EditText>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_players)
@@ -37,6 +42,7 @@ class AddPlayersActivity : AppCompatActivity() {
 
             // Add EditText to LinearLayout
             editLinearLayout?.addView(editText)
+            editTextList.add(editText)
 
             players++
         }
@@ -44,8 +50,30 @@ class AddPlayersActivity : AppCompatActivity() {
         val startGameBtn =  findViewById<Button>(R.id.startGameBtn)
 
         startGameBtn.setOnClickListener{
+            saveData();
+
             val intent = Intent(this, ScoreActivity::class.java)
             startActivity(intent)
         }
+    }
+
+    fun saveData(){
+        val thread = Thread {
+            var dbService = DatabaseService()
+            var db = dbService.getInstance(applicationContext)
+
+            db.userDao().clearTable()
+
+            val users = mutableListOf<User>()
+
+            val editTextListIterator = editTextList.iterator()
+            while (editTextListIterator.hasNext()) {
+                users.add(User(editTextListIterator.next().text.toString()))
+            }
+
+            val userDao = db.userDao()
+            userDao.createAll(users)
+        }
+        thread.start()
     }
 }
