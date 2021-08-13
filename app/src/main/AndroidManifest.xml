@@ -18,6 +18,8 @@
         </activity>
         <activity android:name=".AddPlayersActivity">
         </activity>
+        <activity android:name=".ScoreActivity">
+        </activity>
     </application>
 
 </manifest>

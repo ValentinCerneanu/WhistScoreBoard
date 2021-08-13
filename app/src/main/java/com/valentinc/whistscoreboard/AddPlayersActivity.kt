@@ -1,7 +1,9 @@
 package com.valentinc.whistscoreboard
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
@@ -37,6 +39,13 @@ class AddPlayersActivity : AppCompatActivity() {
             editLinearLayout?.addView(editText)
 
             players++
+        }
+
+        val startGameBtn =  findViewById<Button>(R.id.startGameBtn)
+
+        startGameBtn.setOnClickListener{
+            val intent = Intent(this, ScoreActivity::class.java)
+            startActivity(intent)
         }
     }
 }
