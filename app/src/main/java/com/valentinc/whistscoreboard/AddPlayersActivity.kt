@@ -2,6 +2,7 @@ package com.valentinc.whistscoreboard
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.InputType
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
@@ -38,7 +39,8 @@ class AddPlayersActivity : AppCompatActivity() {
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
-            editText.setPadding(20, 20, 20, 20)
+            editText.setPadding(40, 40, 40, 40)
+            editText.inputType = InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
 
             // Add EditText to LinearLayout
             editLinearLayout?.addView(editText)
@@ -50,10 +52,25 @@ class AddPlayersActivity : AppCompatActivity() {
         val startGameBtn =  findViewById<Button>(R.id.startGameBtn)
 
         startGameBtn.setOnClickListener{
-            saveData();
 
-            val intent = Intent(this, ScoreActivity::class.java)
-            startActivity(intent)
+            var invalidForm = false
+            val editTextListIterator = editTextList.iterator()
+            while (editTextListIterator.hasNext()) {
+                val editText = editTextListIterator.next()
+                if(editText.text.toString() == "")
+                {
+                    editText.error = "Can't be empty!"
+                    editText.requestFocus()
+                    invalidForm = true;
+                }
+            }
+            if(!invalidForm)
+            {
+                saveData();
+
+                val intent = Intent(this, ScoreActivity::class.java)
+                startActivity(intent)
+            }
         }
     }
 
