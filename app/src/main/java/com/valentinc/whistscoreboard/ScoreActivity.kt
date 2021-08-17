@@ -6,6 +6,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.valentinc.whistscoreboard.adapters.HeaderAdapter
+import com.valentinc.whistscoreboard.adapters.RoundScoreAdapter
+import com.valentinc.whistscoreboard.models.RoundScore
 import com.valentinc.whistscoreboard.models.User
 import com.valentinc.whistscoreboard.services.DatabaseService
 import kotlinx.android.synthetic.main.activity_score.*
@@ -14,7 +16,10 @@ import kotlinx.android.synthetic.main.activity_score.*
 class ScoreActivity : AppCompatActivity() {
 
     private lateinit var  headerAdapter: HeaderAdapter
-    private var dataList = mutableListOf<User>()
+    private var userList = mutableListOf<User>()
+
+    private lateinit var  roundScoreAdapter: RoundScoreAdapter
+    private var roundScoreList = mutableListOf<RoundScore>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,17 +27,36 @@ class ScoreActivity : AppCompatActivity() {
 
         val players = getPlayers()
 
-        players.observe(this, Observer { player ->
+        var playersNumber = 0
 
+        players.observe(this, Observer { player ->
+            playersNumber = player.size
             val playerIterator = player.listIterator()
-            recyclerView.layoutManager = GridLayoutManager(applicationContext, player.size)
+            headerRecyclerView.layoutManager = GridLayoutManager(applicationContext, playersNumber)
             headerAdapter = HeaderAdapter(applicationContext)
-            recyclerView.adapter = headerAdapter
+            headerRecyclerView.adapter = headerAdapter
 
             while (playerIterator.hasNext()) {
-                dataList.add(User(playerIterator.next().name.toString()))
+                userList.add(User(playerIterator.next().name.toString()))
             }
-            headerAdapter.setDataList(dataList)
+            headerAdapter.setDataList(userList)
+
+
+            roundRecyclerView.layoutManager = GridLayoutManager(applicationContext, playersNumber)
+            roundScoreAdapter = RoundScoreAdapter(applicationContext)
+            roundRecyclerView.adapter = roundScoreAdapter
+
+            //Mock up
+            roundScoreList.add(RoundScore(0, 0))
+            roundScoreList.add(RoundScore(0, 0))
+            roundScoreList.add(RoundScore(0, 0))
+
+            roundScoreList.add(RoundScore(0, 0))
+            roundScoreList.add(RoundScore(0, 0))
+            roundScoreList.add(RoundScore(0, 0))
+
+            roundScoreAdapter.setDataList(roundScoreList)
+
         })
     }
 
