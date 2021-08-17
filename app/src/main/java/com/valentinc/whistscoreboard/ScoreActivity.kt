@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.valentinc.whistscoreboard.adapters.HeaderAdapter
+import com.valentinc.whistscoreboard.adapters.RoundNumberAdapter
 import com.valentinc.whistscoreboard.adapters.RoundScoreAdapter
 import com.valentinc.whistscoreboard.models.RoundScore
 import com.valentinc.whistscoreboard.models.User
@@ -21,6 +22,9 @@ class ScoreActivity : AppCompatActivity() {
     private lateinit var  roundScoreAdapter: RoundScoreAdapter
     private var roundScoreList = mutableListOf<RoundScore>()
 
+    private lateinit var  roundNumberAdapter: RoundNumberAdapter
+    private var roundNumberList = mutableListOf<Int>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_score)
@@ -32,6 +36,8 @@ class ScoreActivity : AppCompatActivity() {
         players.observe(this, Observer { player ->
             playersNumber = player.size
             val playerIterator = player.listIterator()
+
+            //Round Header
             headerRecyclerView.layoutManager = GridLayoutManager(applicationContext, playersNumber)
             headerAdapter = HeaderAdapter(applicationContext)
             headerRecyclerView.adapter = headerAdapter
@@ -41,20 +47,50 @@ class ScoreActivity : AppCompatActivity() {
             }
             headerAdapter.setDataList(userList)
 
+            //Round Number
+            round_number_RecyclerView.layoutManager = GridLayoutManager(applicationContext, 1)
+            roundNumberAdapter = RoundNumberAdapter(applicationContext)
+            round_number_RecyclerView.adapter = roundNumberAdapter
 
+            roundNumberList.add(0)
+
+            for (i in 1..playersNumber) {
+                roundNumberList.add(1)
+            }
+
+            roundNumberList.add(2)
+            roundNumberList.add(3)
+            roundNumberList.add(4)
+            roundNumberList.add(5)
+            roundNumberList.add(6)
+            roundNumberList.add(7)
+
+            for (i in 1..playersNumber) {
+                roundNumberList.add(8)
+            }
+
+            roundNumberList.add(7)
+            roundNumberList.add(6)
+            roundNumberList.add(5)
+            roundNumberList.add(4)
+            roundNumberList.add(3)
+            roundNumberList.add(2)
+
+            for (i in 1..playersNumber) {
+                roundNumberList.add(1)
+            }
+            roundNumberAdapter.setDataList(roundNumberList)
+
+            //Round Score
             roundRecyclerView.layoutManager = GridLayoutManager(applicationContext, playersNumber)
             roundScoreAdapter = RoundScoreAdapter(applicationContext)
             roundRecyclerView.adapter = roundScoreAdapter
 
-            //Mock up
-            roundScoreList.add(RoundScore(0, 0))
-            roundScoreList.add(RoundScore(0, 0))
-            roundScoreList.add(RoundScore(0, 0))
-
-            roundScoreList.add(RoundScore(0, 0))
-            roundScoreList.add(RoundScore(0, 0))
-            roundScoreList.add(RoundScore(0, 0))
-
+            for (i in 1..roundNumberList.size) {
+                for (j in 1..playersNumber) {
+                    roundScoreList.add(RoundScore(0, 0))
+                }
+            }
             roundScoreAdapter.setDataList(roundScoreList)
 
         })
