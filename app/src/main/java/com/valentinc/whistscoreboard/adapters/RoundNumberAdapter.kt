@@ -33,11 +33,6 @@ class RoundNumberAdapter (var context: Context) : RecyclerView.Adapter<RoundNumb
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         var data = dataList[position]
 
-        if(data == 0)
-            holder.itemView.visibility = View.INVISIBLE
-        else
-            holder.itemView.visibility = View.VISIBLE
-
         holder.roundNumber.text = data.toString()
     }
 

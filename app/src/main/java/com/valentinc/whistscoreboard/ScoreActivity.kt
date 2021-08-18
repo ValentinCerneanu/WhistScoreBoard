@@ -52,8 +52,6 @@ class ScoreActivity : AppCompatActivity() {
             roundNumberAdapter = RoundNumberAdapter(applicationContext)
             round_number_RecyclerView.adapter = roundNumberAdapter
 
-            roundNumberList.add(0)
-
             for (i in 1..playersNumber) {
                 roundNumberList.add(1)
             }
