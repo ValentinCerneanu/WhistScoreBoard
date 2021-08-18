@@ -11,7 +11,6 @@ import com.valentinc.whistscoreboard.R
 class RoundNumberAdapter (var context: Context) : RecyclerView.Adapter<RoundNumberAdapter.ViewHolder>() {
 
     var dataList = emptyList<Int>()
-    var position: Int = 0
 
     internal fun setDataList(dataList: List<Int>) {
         this.dataList = dataList
@@ -27,15 +26,17 @@ class RoundNumberAdapter (var context: Context) : RecyclerView.Adapter<RoundNumb
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         var view = LayoutInflater.from(parent.context).inflate(R.layout.row_round_number, parent, false)
-        if(position == 0)
-            view.visibility = View.INVISIBLE
-        position++
 
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         var data = dataList[position]
+
+        if(data == 0)
+            holder.itemView.visibility = View.INVISIBLE
+        else
+            holder.itemView.visibility = View.VISIBLE
 
         holder.roundNumber.text = data.toString()
     }
