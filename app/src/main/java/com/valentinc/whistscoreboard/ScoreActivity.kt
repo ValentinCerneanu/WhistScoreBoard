@@ -1,6 +1,7 @@
 package com.valentinc.whistscoreboard
 
 import android.os.Bundle
+import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.LiveData
@@ -25,6 +26,13 @@ class ScoreActivity : AppCompatActivity() {
 
     private lateinit var  roundNumberAdapter: RoundNumberAdapter
     private var roundNumberList = mutableListOf<Int>()
+
+    private lateinit var playButton: ImageButton
+    private lateinit var backButton: ImageButton
+
+    private var isGameStarted: Boolean = false
+    private var currentRound: Int = 1
+    private var currentPlayer: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,8 +102,27 @@ class ScoreActivity : AppCompatActivity() {
                 }
             }
             roundScoreAdapter.setDataList(roundScoreList)
-
         })
+
+        playButton = findViewById<ImageButton>(R.id.playImageView)
+        playButton.setOnClickListener({ view ->
+            if(isGameStarted == false)
+                playButton.setImageResource(R.drawable.icon_arrow_next)
+
+            val betDialogClass = BetDialogClass(this, roundNumberList[currentRound], userList[currentPlayer] )
+            betDialogClass.show()
+            currentPlayer++
+            if(currentPlayer == playersNumber)
+            {
+                currentPlayer = 0
+                currentRound++
+            }
+        })
+
+        backButton = findViewById<ImageButton>(R.id.backImageView)
+        backButton.setOnClickListener({ view ->
+        })
+
     }
 
     fun getPlayers(): LiveData<List<User>> {
