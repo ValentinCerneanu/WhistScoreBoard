@@ -3,7 +3,6 @@ package com.valentinc.whistscoreboard
 import android.app.Activity
 import android.app.Dialog
 import android.os.Bundle
-import android.view.View
 import android.view.Window
 import androidx.recyclerview.widget.GridLayoutManager
 import com.valentinc.whistscoreboard.adapters.BetDialogAdapter
@@ -12,7 +11,7 @@ import kotlinx.android.synthetic.main.dialog_bet.*
 
 
 class BetDialogClass
-    (var c: Activity, var roundNumber: Int, var playerName: User) : Dialog(c), View.OnClickListener {
+    (var c: Activity, var roundNumber: Int, var playerName: User) : Dialog(c) {
 
     var d: Dialog? = null
 
@@ -41,10 +40,5 @@ class BetDialogClass
         betRecyclerView.adapter = betDialogAdapter
 
         betDialogAdapter.setDataList(predictions)
-
-    }
-
-    override fun onClick(v: View) {
-        dismiss()
     }
 }

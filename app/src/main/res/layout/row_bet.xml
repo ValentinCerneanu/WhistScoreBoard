@@ -6,7 +6,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="3dp"
     app:cardBackgroundColor="@android:color/white"
-    android:layout_margin="5dp"
     app:cardElevation="4dp">
 
     <LinearLayout
@@ -14,14 +13,12 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
+        <Button
             android:id="@+id/bet"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@android:color/black"
-            android:textSize="18dp"
-            android:layout_marginLeft="7dp"
-            android:layout_marginRight="5dp"/>
+            android:textSize="18sp" />
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

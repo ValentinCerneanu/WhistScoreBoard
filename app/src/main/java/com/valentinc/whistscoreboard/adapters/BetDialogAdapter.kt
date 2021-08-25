@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
 import com.valentinc.whistscoreboard.R
 
@@ -16,11 +16,17 @@ class BetDialogAdapter(var context: Context) : RecyclerView.Adapter<BetDialogAda
         this.dataList = dataList
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var bet: TextView
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+        var bet: Button
 
         init {
             bet = itemView.findViewById(R.id.bet)
+            bet.setOnClickListener(this)
+        }
+
+        override fun onClick(v: View) {
+            val button = v as Button
+            val bet = button.text
         }
     }
 
