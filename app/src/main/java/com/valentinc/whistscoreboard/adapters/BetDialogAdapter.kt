@@ -11,27 +11,25 @@ import com.valentinc.whistscoreboard.R
 class BetDialogAdapter(var context: Context) : RecyclerView.Adapter<BetDialogAdapter.ViewHolder>() {
 
     var dataList = emptyList<Int>()
+    var onItemClick: ((Int) -> Unit)? = null
 
     internal fun setDataList(dataList: List<Int>) {
         this.dataList = dataList
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var bet: Button
 
         init {
             bet = itemView.findViewById(R.id.bet)
-            bet.setOnClickListener(this)
-        }
-
-        override fun onClick(v: View) {
-            val button = v as Button
-            val bet = button.text
+            bet.setOnClickListener {
+                onItemClick?.invoke(dataList[adapterPosition])
+            }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        var view = LayoutInflater.from(parent.context).inflate(R.layout.row_bet, parent, false)
+        var view = LayoutInflater.from(parent.context).inflate(R.layout.adapter_bet, parent, false)
         return ViewHolder(view)
     }
 

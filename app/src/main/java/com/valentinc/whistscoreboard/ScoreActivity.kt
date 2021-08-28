@@ -1,6 +1,7 @@
 package com.valentinc.whistscoreboard
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -31,8 +32,9 @@ class ScoreActivity : AppCompatActivity() {
     private lateinit var backButton: ImageButton
 
     private var isGameStarted: Boolean = false
-    private var currentRound: Int = 1
+    private var currentRound: Int = 0
     private var currentPlayer: Int = 0
+    private var betIsDone: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -105,19 +107,29 @@ class ScoreActivity : AppCompatActivity() {
         })
 
         playButton = findViewById<ImageButton>(R.id.playImageView)
-        playButton.setOnClickListener({ view ->
-            if(isGameStarted == false)
+        playButton.setOnClickListener {
+            if (!isGameStarted)
                 playButton.setImageResource(R.drawable.icon_arrow_next)
 
-            val betDialogClass = BetDialogClass(this, roundNumberList[currentRound], userList[currentPlayer] )
-            betDialogClass.show()
-            currentPlayer++
-            if(currentPlayer == playersNumber)
-            {
-                currentPlayer = 0
-                currentRound++
+            if(!betIsDone) {
+                val betDialogClass =
+                    BetDialogClass(this, roundNumberList[currentRound], userList[currentPlayer])
+                betDialogClass.show()
+                betDialogClass.onItemClick = { position ->
+                    roundScoreList[playersNumber * currentRound + currentPlayer].bet =
+                        position
+                    roundScoreAdapter.notifyDataSetChanged()
+
+                    currentPlayer++
+                    if (currentPlayer == playersNumber) {
+                        currentPlayer = 0
+                        currentRound++
+                        betIsDone = true
+                    }
+                }
             }
-        })
+
+        }
 
         backButton = findViewById<ImageButton>(R.id.backImageView)
         backButton.setOnClickListener({ view ->

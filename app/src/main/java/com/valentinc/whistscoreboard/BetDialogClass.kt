@@ -17,6 +17,8 @@ class BetDialogClass
 
     private lateinit var  betDialogAdapter: BetDialogAdapter
     private var predictions = mutableListOf<Int>()
+    var onItemClick: ((Int) -> Unit)? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +40,12 @@ class BetDialogClass
         betRecyclerView.layoutManager = GridLayoutManager(c, numberOfColumns)
         betDialogAdapter = BetDialogAdapter(c)
         betRecyclerView.adapter = betDialogAdapter
+
+        betDialogAdapter.onItemClick = {
+            position->
+            onItemClick?.invoke(position)
+            dismiss()
+        }
 
         betDialogAdapter.setDataList(predictions)
     }
