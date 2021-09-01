@@ -1,7 +1,6 @@
 package com.valentinc.whistscoreboard
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -123,8 +122,25 @@ class ScoreActivity : AppCompatActivity() {
                     currentPlayer++
                     if (currentPlayer == playersNumber) {
                         currentPlayer = 0
-                        currentRound++
                         betIsDone = true
+                    }
+                }
+            } else {
+                val scoreDialogClass = AnswerDialogClass(this, roundNumberList[currentRound], userList[currentPlayer])
+                scoreDialogClass.show()
+                scoreDialogClass.onItemClick = { position ->
+                    if(position)
+                        roundScoreList[playersNumber * currentRound + currentPlayer].score = 1
+                    else
+                        roundScoreList[playersNumber * currentRound + currentPlayer].score = 0
+
+                    roundScoreAdapter.notifyDataSetChanged()
+
+                    currentPlayer++
+                    if (currentPlayer == playersNumber) {
+                        currentPlayer = 0
+                        currentRound++
+                        betIsDone = false
                     }
                 }
             }
