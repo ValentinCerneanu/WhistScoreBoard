@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.dialog_bet.*
 
 
 class BetDialogClass
-    (var c: Activity, var roundNumber: Int, var playerName: User, var sumOfBets:Int = -1) : Dialog(c) {
+    (var c: Activity, var roundNumber: Int, var playerName: User, var sumOfBets:Int = -1, var isBetRound:Boolean = true) : Dialog(c) {
 
     var d: Dialog? = null
 
@@ -26,7 +26,11 @@ class BetDialogClass
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(R.layout.dialog_bet)
 
-        val predictionString = c.getString(R.string.predict).format(playerName.name, roundNumber)
+        var predictionString = ""
+        if(isBetRound)
+            predictionString= c.getString(R.string.predict).format(playerName.name, roundNumber)
+        else
+            predictionString= c.getString(R.string.prediction_result_explicit).format(playerName.name)
 
         prediction_textView.text = predictionString
 

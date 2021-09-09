@@ -4,6 +4,7 @@
     <string name="start_game">Start game!</string>
     <string name="predict">Player %s predicts the exact number of points from the %s cards round</string>
     <string name="prediction_result">Player %s prediction was true?</string>
+    <string name="prediction_result_explicit">How many hands made player %s?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
 </resources>
