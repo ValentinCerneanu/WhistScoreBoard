@@ -7,13 +7,14 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
 import com.valentinc.whistscoreboard.R
+import com.valentinc.whistscoreboard.models.Bet
 
 class BetDialogAdapter(var context: Context) : RecyclerView.Adapter<BetDialogAdapter.ViewHolder>() {
 
-    var dataList = emptyList<Int>()
+    var dataList = emptyList<Bet>()
     var onItemClick: ((Int) -> Unit)? = null
 
-    internal fun setDataList(dataList: List<Int>) {
+    internal fun setDataList(dataList: List<Bet>) {
         this.dataList = dataList
     }
 
@@ -23,7 +24,7 @@ class BetDialogAdapter(var context: Context) : RecyclerView.Adapter<BetDialogAda
         init {
             bet = itemView.findViewById(R.id.bet)
             bet.setOnClickListener {
-                onItemClick?.invoke(dataList[adapterPosition])
+                onItemClick?.invoke(dataList[adapterPosition].bet)
             }
         }
     }
@@ -36,7 +37,11 @@ class BetDialogAdapter(var context: Context) : RecyclerView.Adapter<BetDialogAda
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         var data = dataList[position]
 
-        holder.bet.text = data.toString()
+        if(!data.isPossible) {
+            holder.bet.visibility = View.GONE
+        }
+
+        holder.bet.text = data.bet.toString()
     }
 
     override fun getItemCount() = dataList.size

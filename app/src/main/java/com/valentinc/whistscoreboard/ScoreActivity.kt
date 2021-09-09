@@ -34,6 +34,7 @@ class ScoreActivity : AppCompatActivity() {
     private var currentRound: Int = 0
     private var currentPlayer: Int = 0
     private var betIsDone: Boolean = false
+    private var sumOfBets: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -111,17 +112,27 @@ class ScoreActivity : AppCompatActivity() {
                 playButton.setImageResource(R.drawable.icon_arrow_next)
 
             if(!betIsDone) {
-                val betDialogClass =
-                    BetDialogClass(this, roundNumberList[currentRound], userList[currentPlayer])
+                lateinit var betDialogClass: BetDialogClass
+                if(currentPlayer == playersNumber - 1)
+                {
+                    betDialogClass =
+                        BetDialogClass(this, roundNumberList[currentRound], userList[currentPlayer], sumOfBets)
+                }
+                else {
+                    betDialogClass =
+                        BetDialogClass(this, roundNumberList[currentRound], userList[currentPlayer])
+                }
                 betDialogClass.show()
                 betDialogClass.onItemClick = { position ->
                     roundScoreList[playersNumber * currentRound + currentPlayer].bet =
                         position
+                    sumOfBets += position
                     roundScoreAdapter.notifyDataSetChanged()
 
                     currentPlayer++
                     if (currentPlayer == playersNumber) {
                         currentPlayer = 0
+                        sumOfBets = 0
                         betIsDone = true
                     }
                 }

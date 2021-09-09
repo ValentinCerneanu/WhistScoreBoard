@@ -6,17 +6,18 @@ import android.os.Bundle
 import android.view.Window
 import androidx.recyclerview.widget.GridLayoutManager
 import com.valentinc.whistscoreboard.adapters.BetDialogAdapter
+import com.valentinc.whistscoreboard.models.Bet
 import com.valentinc.whistscoreboard.models.User
 import kotlinx.android.synthetic.main.dialog_bet.*
 
 
 class BetDialogClass
-    (var c: Activity, var roundNumber: Int, var playerName: User) : Dialog(c) {
+    (var c: Activity, var roundNumber: Int, var playerName: User, var sumOfBets:Int = -1) : Dialog(c) {
 
     var d: Dialog? = null
 
     private lateinit var  betDialogAdapter: BetDialogAdapter
-    private var predictions = mutableListOf<Int>()
+    private var predictions = mutableListOf<Bet>()
     var onItemClick: ((Int) -> Unit)? = null
 
 
@@ -29,9 +30,14 @@ class BetDialogClass
 
         prediction_textView.text = predictionString
 
-        for (i in 0..roundNumber) {
-            predictions.add(i)
-        }
+        if(sumOfBets != -1)
+            for (i in 0..roundNumber) {
+                predictions.add(Bet(i, i+sumOfBets == roundNumber))
+            }
+        else
+            for (i in 0..roundNumber) {
+                predictions.add(Bet(i))
+            }
 
         var numberOfColumns = roundNumber + 1
         if(numberOfColumns >= 3)
