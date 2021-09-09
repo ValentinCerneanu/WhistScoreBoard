@@ -32,7 +32,7 @@ class BetDialogClass
 
         if(sumOfBets != -1)
             for (i in 0..roundNumber) {
-                predictions.add(Bet(i, i+sumOfBets == roundNumber))
+                predictions.add(Bet(i, i+sumOfBets != roundNumber))
             }
         else
             for (i in 0..roundNumber) {
