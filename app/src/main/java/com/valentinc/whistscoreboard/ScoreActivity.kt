@@ -174,8 +174,23 @@ class ScoreActivity : AppCompatActivity() {
         }
 
         backButton = findViewById<ImageButton>(R.id.backImageView)
-        backButton.setOnClickListener({ view ->
-        })
+        backButton.setOnClickListener { view ->
+            if (!betIsDone || currentPlayer == 0) {
+                if (currentPlayer == 0) {
+                    currentPlayer = playersNumber
+                    sumOfBets = 0
+                    betIsDone = false
+                }
+                currentPlayer--
+
+                sumOfBets -= roundScoreList[playersNumber * currentRound + currentPlayer].bet
+                roundScoreList[playersNumber * currentRound + currentPlayer].bet = 0
+                roundScoreAdapter.notifyDataSetChanged()
+            } else {
+
+            }
+
+        }
 
     }
 
