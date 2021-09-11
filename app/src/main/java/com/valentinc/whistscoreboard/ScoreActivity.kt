@@ -1,6 +1,7 @@
 package com.valentinc.whistscoreboard
 
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -107,8 +108,11 @@ class ScoreActivity : AppCompatActivity() {
 
         playButton = findViewById<ImageButton>(R.id.playImageView)
         playButton.setOnClickListener {
-            if (!isGameStarted)
+            if (!isGameStarted){
+                isGameStarted = true
                 playButton.setImageResource(R.drawable.icon_arrow_next)
+                backButton.visibility = View.VISIBLE
+            }
 
             if(!betIsDone) {
                 lateinit var betDialogClass: BetDialogClass
@@ -174,11 +178,16 @@ class ScoreActivity : AppCompatActivity() {
         }
 
         backButton = findViewById<ImageButton>(R.id.backImageView)
+        backButton.visibility = View.GONE
         backButton.setOnClickListener { view ->
-            if (!betIsDone || currentPlayer == 0) {
+            if ((!betIsDone  && currentPlayer != 0) || (currentPlayer == 0 && betIsDone)) {
                 if (currentPlayer == 0) {
                     currentPlayer = playersNumber
+
                     sumOfBets = 0
+                    for (i in 1..playersNumber) {
+                        sumOfBets += roundScoreList[playersNumber * currentRound + currentPlayer - i].bet
+                    }
                     betIsDone = false
                 }
                 currentPlayer--
@@ -186,12 +195,23 @@ class ScoreActivity : AppCompatActivity() {
                 sumOfBets -= roundScoreList[playersNumber * currentRound + currentPlayer].bet
                 roundScoreList[playersNumber * currentRound + currentPlayer].bet = 0
                 roundScoreAdapter.notifyDataSetChanged()
+
+                if(currentPlayer == 0 && currentRound == 0){
+                    backButton.visibility = View.GONE
+                    isGameStarted = false
+                    playButton.setImageResource(R.drawable.icon_play)
+                }
             } else {
-
+                if (currentPlayer == 0) {
+                    currentPlayer = playersNumber
+                    betIsDone = true
+                    currentRound--
+                }
+                currentPlayer--
+                roundScoreList[playersNumber * currentRound + currentPlayer].score = 0
+                roundScoreAdapter.notifyDataSetChanged()
             }
-
         }
-
     }
 
     private fun finishRound(){
