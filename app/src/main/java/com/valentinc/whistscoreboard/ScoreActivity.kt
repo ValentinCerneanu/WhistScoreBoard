@@ -150,6 +150,9 @@ class ScoreActivity : AppCompatActivity() {
                         else
                             roundScoreList[playersNumber * currentRound + currentPlayer].score =
                                 5 + roundScoreList[playersNumber * currentRound + currentPlayer].bet
+                        userList[currentPlayer].score = roundScoreList[playersNumber * currentRound + currentPlayer].score
+                        headerAdapter.notifyDataSetChanged()
+                        finishRound()
                     }
                     else {
                         var actualBetDialogClass: BetDialogClass
@@ -164,11 +167,12 @@ class ScoreActivity : AppCompatActivity() {
                             else
                                 roundScoreList[playersNumber * currentRound + currentPlayer].score =
                                     - kotlin.math.abs(position - roundScoreList[playersNumber * currentRound + currentPlayer].bet)
+
+                            userList[currentPlayer].score = roundScoreList[playersNumber * currentRound + currentPlayer].score
+                            headerAdapter.notifyDataSetChanged()
+                            finishRound()
                         }
                     }
-                    userList[currentPlayer].score = roundScoreList[playersNumber * currentRound + currentPlayer].score
-                    headerAdapter.notifyDataSetChanged()
-                    finishRound()
                 }
             }
 
