@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 data class User(
     @PrimaryKey(autoGenerate = true) val uid: Int,
     @ColumnInfo(name = "name") val name: String?,
-    @ColumnInfo(name = "score") var score: Int?
+    @ColumnInfo(name = "score") var score: Int
 ) {
     constructor(name: String) : this(0, name, 0)
 }
