@@ -37,6 +37,7 @@ class ScoreActivity : AppCompatActivity() {
     private var betIsDone: Boolean = false
     private var sumOfBets: Int = 0
     private var playersNumber: Int = 0
+    private var handsDone: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -144,33 +145,24 @@ class ScoreActivity : AppCompatActivity() {
                 scoreDialogClass.show()
                 scoreDialogClass.onItemClick = { position ->
                     if(position) {
-                        if (currentRound > 0)
-                            roundScoreList[playersNumber * currentRound + currentPlayer].score =
-                                roundScoreList[playersNumber * (currentRound - 1) + currentPlayer].score + 5 + roundScoreList[playersNumber * currentRound + currentPlayer].bet
-                        else
-                            roundScoreList[playersNumber * currentRound + currentPlayer].score =
-                                5 + roundScoreList[playersNumber * currentRound + currentPlayer].bet
-                        userList[currentPlayer].score = roundScoreList[playersNumber * currentRound + currentPlayer].score
-                        headerAdapter.notifyDataSetChanged()
-                        finishRound()
+                        executePredictionTrue()
+
+                        handsDone++
+                        if(handsDone == roundNumberList[currentRound]) {
+                            while(currentPlayer!= 0 && currentPlayer < playersNumber){
+                                if(roundScoreList[playersNumber * currentRound + currentPlayer].bet != 0)
+                                    executePredictionFalse(0)
+                                else
+                                    executePredictionTrue()
+                            }
+                        }
                     }
                     else {
                         var actualBetDialogClass: BetDialogClass
                         actualBetDialogClass = BetDialogClass(this, roundNumberList[currentRound], userList[currentPlayer], sumOfBets, false)
                         actualBetDialogClass.show()
                         actualBetDialogClass.onItemClick = { position ->
-                            if (currentRound > 0)
-                                roundScoreList[playersNumber * currentRound + currentPlayer].score =
-                                    roundScoreList[playersNumber * (currentRound - 1) + currentPlayer].score - kotlin.math.abs(
-                                        position - roundScoreList[playersNumber * currentRound + currentPlayer].bet
-                                    )
-                            else
-                                roundScoreList[playersNumber * currentRound + currentPlayer].score =
-                                    - kotlin.math.abs(position - roundScoreList[playersNumber * currentRound + currentPlayer].bet)
-
-                            userList[currentPlayer].score = roundScoreList[playersNumber * currentRound + currentPlayer].score
-                            headerAdapter.notifyDataSetChanged()
-                            finishRound()
+                            executePredictionFalse(position)
                         }
                     }
                 }
@@ -221,6 +213,33 @@ class ScoreActivity : AppCompatActivity() {
         }
     }
 
+    private fun executePredictionTrue() {
+        if (currentRound > 0)
+            roundScoreList[playersNumber * currentRound + currentPlayer].score =
+                roundScoreList[playersNumber * (currentRound - 1) + currentPlayer].score + 5 + roundScoreList[playersNumber * currentRound + currentPlayer].bet
+        else
+            roundScoreList[playersNumber * currentRound + currentPlayer].score =
+                5 + roundScoreList[playersNumber * currentRound + currentPlayer].bet
+        userList[currentPlayer].score = roundScoreList[playersNumber * currentRound + currentPlayer].score
+        headerAdapter.notifyDataSetChanged()
+        finishRound()
+    }
+
+    private fun executePredictionFalse(actualPrediction: Int) {
+        if (currentRound > 0)
+            roundScoreList[playersNumber * currentRound + currentPlayer].score =
+                roundScoreList[playersNumber * (currentRound - 1) + currentPlayer].score - kotlin.math.abs(
+                    actualPrediction - roundScoreList[playersNumber * currentRound + currentPlayer].bet
+                )
+        else
+            roundScoreList[playersNumber * currentRound + currentPlayer].score =
+                - kotlin.math.abs(actualPrediction - roundScoreList[playersNumber * currentRound + currentPlayer].bet)
+
+        userList[currentPlayer].score = roundScoreList[playersNumber * currentRound + currentPlayer].score
+        headerAdapter.notifyDataSetChanged()
+        finishRound()
+    }
+
     private fun finishRound(){
         roundScoreAdapter.notifyDataSetChanged()
 
@@ -229,6 +248,7 @@ class ScoreActivity : AppCompatActivity() {
             currentPlayer = 0
             currentRound++
             betIsDone = false
+            handsDone = 0
         }
     }
 
