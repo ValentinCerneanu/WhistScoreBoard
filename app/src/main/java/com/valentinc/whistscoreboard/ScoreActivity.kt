@@ -226,6 +226,9 @@ class ScoreActivity : AppCompatActivity() {
     }
 
     private fun executePredictionFalse(actualPrediction: Int) {
+        roundScoreList[playersNumber * currentRound + currentPlayer].actualBet = actualPrediction
+        roundScoreList[playersNumber * currentRound + currentPlayer].isBetTrue = false
+
         if (currentRound > 0)
             roundScoreList[playersNumber * currentRound + currentPlayer].score =
                 roundScoreList[playersNumber * (currentRound - 1) + currentPlayer].score - kotlin.math.abs(

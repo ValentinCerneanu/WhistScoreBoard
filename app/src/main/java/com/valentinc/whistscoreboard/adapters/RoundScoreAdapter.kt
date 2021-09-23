@@ -1,6 +1,7 @@
 package com.valentinc.whistscoreboard.adapters
 
 import android.content.Context
+import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,10 +21,12 @@ class RoundScoreAdapter (var context: Context) : RecyclerView.Adapter<RoundScore
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var bet: TextView
         var score: TextView
+        var actualBet: TextView
 
         init {
             bet = itemView.findViewById(R.id.bet)
             score = itemView.findViewById(R.id.score)
+            actualBet = itemView.findViewById(R.id.actual_bet)
         }
     }
 
@@ -38,6 +41,10 @@ class RoundScoreAdapter (var context: Context) : RecyclerView.Adapter<RoundScore
 
         holder.bet.text = data.bet.toString()
         holder.score.text = data.score.toString()
+        if(!data.isBetTrue) {
+            holder.bet.paintFlags = holder.bet.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+            holder.actualBet.text = data.actualBet.toString()
+        }
     }
 
     override fun getItemCount() = dataList.size
