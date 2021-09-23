@@ -3,6 +3,7 @@ package com.valentinc.whistscoreboard
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.LiveData
@@ -261,5 +262,19 @@ class ScoreActivity : AppCompatActivity() {
 
         val userDao = db.userDao()
         return userDao.getAll()
+    }
+
+    override fun onBackPressed()
+    {
+        AlertDialog.Builder(this@ScoreActivity)
+            .setTitle("Exit Alert")
+            .setMessage("Do you want to exit the game?")
+            .setPositiveButton(android.R.string.ok) { dialog, whichButton ->
+                super.onBackPressed()
+            }
+            .setNegativeButton(android.R.string.cancel) { dialog, whichButton ->
+
+            }
+            .show()
     }
 }
