@@ -12,13 +12,12 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
 }
 
-public class DatabaseService() {
+class DatabaseService() {
 
-    public fun getInstance(applicationContext: Context): AppDatabase{
+    fun getInstance(applicationContext: Context): AppDatabase{
         return Room.databaseBuilder(
             applicationContext,
-            AppDatabase::class.java, "database-name"
+            AppDatabase::class.java, "WhistScoreBoard"
         ).build()
     }
-
 }

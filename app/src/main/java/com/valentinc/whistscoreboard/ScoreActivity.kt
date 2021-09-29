@@ -6,8 +6,7 @@ import android.widget.ImageButton
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
+import androidx.lifecycle.*
 import androidx.recyclerview.widget.GridLayoutManager
 import com.valentinc.whistscoreboard.adapters.HeaderAdapter
 import com.valentinc.whistscoreboard.adapters.RoundNumberAdapter
@@ -16,6 +15,7 @@ import com.valentinc.whistscoreboard.models.RoundScore
 import com.valentinc.whistscoreboard.models.User
 import com.valentinc.whistscoreboard.services.DatabaseService
 import kotlinx.android.synthetic.main.activity_score.*
+import kotlinx.coroutines.launch
 
 
 class ScoreActivity : AppCompatActivity() {
@@ -257,10 +257,9 @@ class ScoreActivity : AppCompatActivity() {
     }
 
     fun getPlayers(): LiveData<List<User>> {
-        var dbService = DatabaseService()
-        var db = dbService.getInstance(applicationContext)
+        val dataService = DatabaseService().getInstance(applicationContext)
 
-        val userDao = db.userDao()
+        val userDao = dataService.userDao()
         return userDao.getAll()
     }
 
@@ -270,6 +269,7 @@ class ScoreActivity : AppCompatActivity() {
             .setTitle("Exit Alert")
             .setMessage("Do you want to exit the game?")
             .setPositiveButton(android.R.string.ok) { dialog, whichButton ->
+                saveCurrentState()
                 super.onBackPressed()
             }
             .setNegativeButton(android.R.string.cancel) { dialog, whichButton ->
@@ -277,4 +277,13 @@ class ScoreActivity : AppCompatActivity() {
             }
             .show()
     }
+
+    fun saveCurrentState() {
+        val dataService = DatabaseService().getInstance(applicationContext)
+
+        lifecycleScope.launch {
+            dataService.userDao().insertAll(userList)
+        }
+    }
+
 }
