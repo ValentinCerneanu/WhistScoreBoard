@@ -283,6 +283,7 @@ class ScoreActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             dataService.userDao().insertAll(userList)
+            dataService.roundScoreDao().insertAll(roundScoreList)
         }
     }
 

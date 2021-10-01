@@ -7,4 +7,6 @@
     <string name="prediction_result_explicit">How many hands made player %s?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="new_game">New Game</string>
+    <string name="saved_games">Saved Games</string>
 </resources>

@@ -6,8 +6,20 @@ import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
+import com.valentinc.whistscoreboard.adapters.HeaderAdapter
+import com.valentinc.whistscoreboard.models.RoundScore
+import com.valentinc.whistscoreboard.services.DatabaseService
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_score.*
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var savedGamesAdapter: HeaderAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,6 +37,31 @@ class MainActivity : AppCompatActivity() {
         button4.setOnClickListener(listener)
         button5.setOnClickListener(listener)
         button6.setOnClickListener(listener)
+
+        getSavedGames()
+    }
+
+    fun getSavedGames() {
+        val dataService = DatabaseService().getInstance(applicationContext)
+
+        lifecycleScope.launch {
+            var users = dataService.userDao().getAll()
+            users.observe(this@MainActivity, Observer { users ->
+                if(users.size > 0) {
+                    saved_games_list.layoutManager = GridLayoutManager(applicationContext, users.size)
+                    savedGamesAdapter = HeaderAdapter(applicationContext)
+                    saved_games_list.adapter = savedGamesAdapter
+                    savedGamesAdapter.setDataList(users)
+
+                    var roundScore : LiveData<List<RoundScore>>
+
+                    roundScore = dataService.roundScoreDao().getAll()
+                    roundScore.observe(this@MainActivity, Observer { roundScore ->
+                        print(roundScore)
+                    })
+                }
+            })
+        }
     }
 
     val listener = View.OnClickListener { view ->
