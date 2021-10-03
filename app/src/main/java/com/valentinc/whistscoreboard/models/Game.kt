@@ -1,13 +1,15 @@
 package com.valentinc.whistscoreboard.models
 
+import androidx.annotation.NonNull
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.util.*
 
 @Entity
 data class Game(
-    @PrimaryKey(autoGenerate = true) val uid: Int,
-    @ColumnInfo(name = "users") var users: List<User>
+    @PrimaryKey @NonNull val uid: UUID,
+    @ColumnInfo(name = "date") var date: Date
 ) {
-    constructor(users:  List<User>) : this(0, users)
+    constructor(date:  Date) : this(UUID.randomUUID(), date)
 }

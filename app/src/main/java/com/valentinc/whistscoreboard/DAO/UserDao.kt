@@ -3,11 +3,15 @@ package com.valentinc.whistscoreboard.DAO
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.valentinc.whistscoreboard.models.User
+import java.util.*
 
 @Dao
 interface UserDao {
     @Query("SELECT * FROM user")
     fun getAll(): LiveData<List<User>>
+
+    @Query("SELECT * FROM user WHERE gameId = :gameId")
+    fun getUsersByGame(gameId: UUID): LiveData<List<User>>
 
     @Query("SELECT * FROM user")
     suspend fun getAllAsList(): List<User>

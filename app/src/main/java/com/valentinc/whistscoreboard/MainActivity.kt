@@ -6,18 +6,16 @@ import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.valentinc.whistscoreboard.models.RoundScore
 import com.valentinc.whistscoreboard.services.DatabaseService
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_score.*
 import kotlinx.coroutines.launch
 import androidx.recyclerview.widget.RecyclerView
 import com.valentinc.whistscoreboard.adapters.SavedGamesAdapter
-import com.valentinc.whistscoreboard.models.Game
+import com.valentinc.whistscoreboard.models.GameWrapper
 
 class MainActivity : AppCompatActivity() {
 
@@ -44,10 +42,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun getSavedGames() {
-        var games = mutableListOf<Game>()
+        var gameWrapper = mutableListOf<GameWrapper>()
 
         savedGamesAdapter = SavedGamesAdapter(this)
-        savedGamesAdapter.setDataList(games)
+        savedGamesAdapter.setDataList(gameWrapper)
 
         var parentRecyclerView = findViewById<RecyclerView>(R.id.saved_games_list)
         parentRecyclerView.adapter = savedGamesAdapter
@@ -56,18 +54,16 @@ class MainActivity : AppCompatActivity() {
         val dataService = DatabaseService().getInstance(applicationContext)
 
         lifecycleScope.launch {
-            var users = dataService.userDao().getAll()
-            users.observe(this@MainActivity, Observer { users ->
-                if(users.size > 0) {
+            var games = dataService.gameDao().getAll()
+            games.observe(this@MainActivity, Observer { games ->
+                for(game in games){
+                    var users = dataService.userDao().getUsersByGame(game.uid)
 
-                    games.add(Game(users))
-                    savedGamesAdapter.notifyDataSetChanged()
-
-                    var roundScore : LiveData<List<RoundScore>>
-
-                    roundScore = dataService.roundScoreDao().getAll()
-                    roundScore.observe(this@MainActivity, Observer { roundScore ->
-                        print(roundScore)
+                    users.observe(this@MainActivity, Observer { users ->
+                        if(users.size > 0) {
+                            gameWrapper.add(GameWrapper(game, users))
+                            savedGamesAdapter.notifyDataSetChanged()
+                        }
                     })
                 }
             })

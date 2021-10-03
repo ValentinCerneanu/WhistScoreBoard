@@ -7,15 +7,18 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.*
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.valentinc.whistscoreboard.adapters.HeaderAdapter
 import com.valentinc.whistscoreboard.adapters.RoundNumberAdapter
 import com.valentinc.whistscoreboard.adapters.RoundScoreAdapter
+import com.valentinc.whistscoreboard.models.Game
 import com.valentinc.whistscoreboard.models.RoundScore
 import com.valentinc.whistscoreboard.models.User
 import com.valentinc.whistscoreboard.services.DatabaseService
 import kotlinx.android.synthetic.main.activity_score.*
 import kotlinx.coroutines.launch
+import java.util.*
 
 
 class ScoreActivity : AppCompatActivity() {
@@ -47,7 +50,15 @@ class ScoreActivity : AppCompatActivity() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        val players = getPlayers()
+        val gameId: String?
+        gameId = if (savedInstanceState == null) {
+            val extras = intent.extras
+            extras?.getString("game_id")
+        } else {
+            savedInstanceState.getSerializable("game_id") as String?
+        }
+
+        val players = getPlayers(gameId!!)
 
         players.observe(this, Observer { player ->
             playersNumber = player.size
@@ -256,11 +267,11 @@ class ScoreActivity : AppCompatActivity() {
         }
     }
 
-    fun getPlayers(): LiveData<List<User>> {
+    fun getPlayers(gameId: String): LiveData<List<User>> {
         val dataService = DatabaseService().getInstance(applicationContext)
 
         val userDao = dataService.userDao()
-        return userDao.getAll()
+        return userDao.getUsersByGame(UUID.fromString(gameId))
     }
 
     override fun onBackPressed()
@@ -282,6 +293,15 @@ class ScoreActivity : AppCompatActivity() {
         val dataService = DatabaseService().getInstance(applicationContext)
 
         lifecycleScope.launch {
+            var game = Game(Date())
+            for(user in userList){
+                user.gameId = game.uid
+            }
+            for(roundScore in roundScoreList){
+                roundScore.gameId = game.uid
+            }
+            //TODO do not create new game. get the existing one from the AddPlayersActivity
+            dataService.gameDao().insert(game)
             dataService.userDao().insertAll(userList)
             dataService.roundScoreDao().insertAll(roundScoreList)
         }

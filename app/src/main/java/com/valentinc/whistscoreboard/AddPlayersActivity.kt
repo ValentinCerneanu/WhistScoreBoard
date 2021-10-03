@@ -9,8 +9,10 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import com.valentinc.whistscoreboard.models.Game
 import com.valentinc.whistscoreboard.models.User
 import com.valentinc.whistscoreboard.services.DatabaseService
+import java.util.*
 
 
 class AddPlayersActivity : AppCompatActivity() {
@@ -70,31 +72,29 @@ class AddPlayersActivity : AppCompatActivity() {
             }
             if(!invalidForm)
             {
-                saveData();
+                var gameId = saveData();
 
                 val intent = Intent(this, ScoreActivity::class.java)
+                intent.putExtra("game_id", gameId.toString())
                 startActivity(intent)
             }
         }
     }
 
-    fun saveData(){
+    fun saveData(): UUID{
+        val dataService = DatabaseService().getInstance(applicationContext)
+        val users = mutableListOf<User>()
+
+        var game = Game(Date())
+
+        val editTextListIterator = editTextList.iterator()
+        while (editTextListIterator.hasNext()) {
+            users.add(User(editTextListIterator.next().text.toString(), game.uid))
+        }
         val thread = Thread {
-            var dbService = DatabaseService()
-            var db = dbService.getInstance(applicationContext)
-
-            db.userDao().clearTable()
-
-            val users = mutableListOf<User>()
-
-            val editTextListIterator = editTextList.iterator()
-            while (editTextListIterator.hasNext()) {
-                users.add(User(editTextListIterator.next().text.toString()))
-            }
-
-            val userDao = db.userDao()
-            userDao.createAll(users)
+            dataService.userDao().createAll(users)
         }
         thread.start()
+        return game.uid
     }
 }

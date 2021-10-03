@@ -7,13 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import com.valentinc.whistscoreboard.R
-import com.valentinc.whistscoreboard.models.Game
+import com.valentinc.whistscoreboard.models.GameWrapper
 
 class SavedGamesAdapter(var context: Context) : RecyclerView.Adapter<SavedGamesAdapter.ViewHolder>() {
 
-    var gamesList = emptyList<Game>()
+    var gamesList = emptyList<GameWrapper>()
 
-    internal fun setDataList(dataList: List<Game>) {
+    internal fun setDataList(dataList: List<GameWrapper>) {
         this.gamesList = dataList
     }
 
@@ -35,7 +35,7 @@ class SavedGamesAdapter(var context: Context) : RecyclerView.Adapter<SavedGamesA
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val currentItem: Game = gamesList[position]
+        val currentItem: GameWrapper = gamesList[position]
 
         holder.childRecyclerView.layoutManager = GridLayoutManager(context, currentItem.users.size)
         holder.childRecyclerView.setHasFixedSize(true)
