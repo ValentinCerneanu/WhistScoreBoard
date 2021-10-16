@@ -6,7 +6,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import java.util.*
 
-@Entity(indices = [Index(value = ["name"], unique = true)])
+@Entity(indices = [Index(value = ["name", "gameId"], unique = true)])
 data class User(
     @PrimaryKey(autoGenerate = true) val uid: Int,
     @ColumnInfo(name = "gameId") var gameId: UUID?,

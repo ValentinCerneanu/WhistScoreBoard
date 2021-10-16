@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.valentinc.whistscoreboard.adapters.HeaderAdapter
 import com.valentinc.whistscoreboard.adapters.RoundNumberAdapter
 import com.valentinc.whistscoreboard.adapters.RoundScoreAdapter
-import com.valentinc.whistscoreboard.models.Game
+import com.valentinc.whistscoreboard.converters.UUIDConverter
 import com.valentinc.whistscoreboard.models.RoundScore
 import com.valentinc.whistscoreboard.models.User
 import com.valentinc.whistscoreboard.services.DatabaseService
@@ -42,6 +42,7 @@ class ScoreActivity : AppCompatActivity() {
     private var sumOfBets: Int = 0
     private var playersNumber: Int = 0
     private var handsDone: Int = 0
+    private lateinit var gameId: UUID
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,15 +51,9 @@ class ScoreActivity : AppCompatActivity() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        val gameId: String?
-        gameId = if (savedInstanceState == null) {
-            val extras = intent.extras
-            extras?.getString("game_id")
-        } else {
-            savedInstanceState.getSerializable("game_id") as String?
-        }
+        gameId = UUIDConverter.uuidFromString(intent.getStringExtra("game_id").toString())!!
 
-        val players = getPlayers(gameId!!)
+        val players = getPlayers(gameId.toString())
 
         players.observe(this, Observer { player ->
             playersNumber = player.size
@@ -293,15 +288,12 @@ class ScoreActivity : AppCompatActivity() {
         val dataService = DatabaseService().getInstance(applicationContext)
 
         lifecycleScope.launch {
-            var game = Game(Date())
             for(user in userList){
-                user.gameId = game.uid
+                user.gameId = gameId
             }
             for(roundScore in roundScoreList){
-                roundScore.gameId = game.uid
+                roundScore.gameId = gameId
             }
-            //TODO do not create new game. get the existing one from the AddPlayersActivity
-            dataService.gameDao().insert(game)
             dataService.userDao().insertAll(userList)
             dataService.roundScoreDao().insertAll(roundScoreList)
         }

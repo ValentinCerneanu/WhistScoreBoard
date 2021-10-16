@@ -92,6 +92,7 @@ class AddPlayersActivity : AppCompatActivity() {
             users.add(User(editTextListIterator.next().text.toString(), game.uid))
         }
         val thread = Thread {
+            dataService.gameDao().insert(game)
             dataService.userDao().createAll(users)
         }
         thread.start()
