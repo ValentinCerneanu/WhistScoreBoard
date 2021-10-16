@@ -77,6 +77,7 @@ class AddPlayersActivity : AppCompatActivity() {
                 val intent = Intent(this, ScoreActivity::class.java)
                 intent.putExtra("game_id", gameId.toString())
                 startActivity(intent)
+                finish()
             }
         }
     }

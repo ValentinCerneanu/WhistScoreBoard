@@ -38,6 +38,10 @@ class MainActivity : AppCompatActivity() {
         button5.setOnClickListener(listener)
         button6.setOnClickListener(listener)
 
+    }
+
+    override fun onResume() {
+        super.onResume()
         getSavedGames()
     }
 
