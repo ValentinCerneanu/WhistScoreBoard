@@ -8,16 +8,18 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import com.valentinc.whistscoreboard.R
 import com.valentinc.whistscoreboard.models.GameWrapper
+import java.util.*
 
 class SavedGamesAdapter(var context: Context) : RecyclerView.Adapter<SavedGamesAdapter.ViewHolder>() {
 
     var gamesList = emptyList<GameWrapper>()
+    var onItemClick: ((UUID) -> Unit)? = null
 
     internal fun setDataList(dataList: List<GameWrapper>) {
         this.gamesList = dataList
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var childRecyclerView: RecyclerView
 
         init {
@@ -40,9 +42,13 @@ class SavedGamesAdapter(var context: Context) : RecyclerView.Adapter<SavedGamesA
         holder.childRecyclerView.layoutManager = GridLayoutManager(context, currentItem.users.size)
         holder.childRecyclerView.setHasFixedSize(true)
 
-        val headerAdapter = HeaderAdapter(holder.childRecyclerView.context)
+        val headerAdapter = HeaderAdapter(holder.childRecyclerView.context, true)
         headerAdapter.setDataList(currentItem.users)
         holder.childRecyclerView.adapter = headerAdapter
+
+        headerAdapter.onItemClick = {
+            user -> onItemClick?.invoke(user.gameId!!)
+        }
     }
 
 }

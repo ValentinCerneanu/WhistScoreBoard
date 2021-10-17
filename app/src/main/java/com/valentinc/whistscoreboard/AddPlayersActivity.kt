@@ -67,7 +67,7 @@ class AddPlayersActivity : AppCompatActivity() {
                 {
                     editText.error = "Can't be empty!"
                     editText.requestFocus()
-                    invalidForm = true;
+                    invalidForm = true
                 }
             }
             if(!invalidForm)

@@ -51,7 +51,12 @@ class ScoreActivity : AppCompatActivity() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        gameId = UUIDConverter.uuidFromString(intent.getStringExtra("game_id").toString())!!
+        if (savedInstanceState == null) {
+            val extras = intent.extras
+            gameId = UUIDConverter.uuidFromString(extras?.get("game_id").toString())!!
+        } else {
+            gameId = UUIDConverter.uuidFromString(savedInstanceState.getSerializable("game_id") as String?)!!
+        }
 
         val players = getPlayers(gameId.toString())
 

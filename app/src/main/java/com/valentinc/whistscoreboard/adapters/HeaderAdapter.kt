@@ -10,15 +10,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.valentinc.whistscoreboard.R
 import com.valentinc.whistscoreboard.models.User
 
-class HeaderAdapter(var context: Context) : RecyclerView.Adapter<HeaderAdapter.ViewHolder>() {
+class HeaderAdapter(var context: Context, var isFromSavedList: Boolean = false) : RecyclerView.Adapter<HeaderAdapter.ViewHolder>() {
 
     var dataList = emptyList<User>()
+    var onItemClick: ((User) -> Unit)? = null
 
     internal fun setDataList(dataList: List<User>) {
         this.dataList = dataList
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var name: TextView
         var score: TextView
         var place: ImageView
@@ -27,6 +28,12 @@ class HeaderAdapter(var context: Context) : RecyclerView.Adapter<HeaderAdapter.V
             name = itemView.findViewById(R.id.name)
             score = itemView.findViewById(R.id.score)
             place = itemView.findViewById(R.id.place)
+
+            if(isFromSavedList) {
+                itemView.setOnClickListener {
+                    onItemClick?.invoke(dataList[adapterPosition])
+                }
+            }
         }
     }
 

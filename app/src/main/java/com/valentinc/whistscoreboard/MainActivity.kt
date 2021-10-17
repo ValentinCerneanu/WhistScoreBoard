@@ -72,6 +72,13 @@ class MainActivity : AppCompatActivity() {
                 }
             })
         }
+
+        savedGamesAdapter.onItemClick = {
+            gameUUID ->
+                val intent = Intent(this, ScoreActivity::class.java)
+                intent.putExtra("game_id", gameUUID)
+                startActivity(intent)
+        }
     }
 
     val listener = View.OnClickListener { view ->
