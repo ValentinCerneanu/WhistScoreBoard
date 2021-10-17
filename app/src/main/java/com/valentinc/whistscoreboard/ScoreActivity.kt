@@ -70,7 +70,7 @@ class ScoreActivity : AppCompatActivity() {
             headerRecyclerView.adapter = headerAdapter
 
             while (playerIterator.hasNext()) {
-                userList.add(User(playerIterator.next().name.toString()))
+                userList.add(playerIterator.next())
             }
             headerAdapter.setDataList(userList)
 
