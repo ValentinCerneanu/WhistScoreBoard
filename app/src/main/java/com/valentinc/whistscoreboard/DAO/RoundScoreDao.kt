@@ -3,14 +3,15 @@ package com.valentinc.whistscoreboard.DAO
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.valentinc.whistscoreboard.models.RoundScore
+import java.util.*
 
 @Dao
 interface RoundScoreDao {
     @Query("SELECT * FROM roundScore")
     fun getAll(): LiveData<List<RoundScore>>
 
-    @Query("SELECT * FROM roundScore")
-    suspend fun getAllAsList(): List<RoundScore>
+    @Query("SELECT * FROM roundScore WHERE gameId = :gameId")
+    fun getRoundScoreByGame(gameId: UUID): LiveData<List<RoundScore>>
 
     @Query("DELETE FROM roundScore")
     fun clearTable()

@@ -58,7 +58,23 @@ class ScoreActivity : AppCompatActivity() {
             gameId = UUIDConverter.uuidFromString(savedInstanceState.getSerializable("game_id") as String?)!!
         }
 
-        val players = getPlayers(gameId.toString())
+        val players = getPlayers(gameId)
+
+        val roundScore = getRoundScore(gameId)
+
+        roundScore.observe(this, Observer { roundScore ->
+            val roundScoreIterator = roundScore.listIterator()
+
+            while (roundScoreIterator.hasNext()) {
+                roundScoreList.add(roundScoreIterator.next())
+            }
+
+            roundRecyclerView.layoutManager = GridLayoutManager(applicationContext, playersNumber)
+            roundScoreAdapter = RoundScoreAdapter(applicationContext)
+            roundRecyclerView.adapter = roundScoreAdapter
+
+            roundScoreAdapter.setDataList(roundScoreList)
+        })
 
         players.observe(this, Observer { player ->
             playersNumber = player.size
@@ -107,16 +123,7 @@ class ScoreActivity : AppCompatActivity() {
             roundNumberAdapter.setDataList(roundNumberList)
 
             //Round Score
-            roundRecyclerView.layoutManager = GridLayoutManager(applicationContext, playersNumber)
-            roundScoreAdapter = RoundScoreAdapter(applicationContext)
-            roundRecyclerView.adapter = roundScoreAdapter
 
-            for (i in 1..roundNumberList.size) {
-                for (j in 1..playersNumber) {
-                    roundScoreList.add(RoundScore(0, 0))
-                }
-            }
-            roundScoreAdapter.setDataList(roundScoreList)
         })
 
         playButton = findViewById<ImageButton>(R.id.playImageView)
@@ -267,11 +274,18 @@ class ScoreActivity : AppCompatActivity() {
         }
     }
 
-    fun getPlayers(gameId: String): LiveData<List<User>> {
+    fun getPlayers(gameId: UUID): LiveData<List<User>> {
         val dataService = DatabaseService().getInstance(applicationContext)
 
         val userDao = dataService.userDao()
-        return userDao.getUsersByGame(UUID.fromString(gameId))
+        return userDao.getUsersByGame(gameId)
+    }
+
+    fun getRoundScore(gameId: UUID): LiveData<List<RoundScore>> {
+        val dataService = DatabaseService().getInstance(applicationContext)
+
+        val roundScore = dataService.roundScoreDao()
+        return roundScore.getRoundScoreByGame(gameId)
     }
 
     override fun onBackPressed()
