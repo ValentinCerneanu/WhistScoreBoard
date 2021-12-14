@@ -60,25 +60,9 @@ class ScoreActivity : AppCompatActivity() {
 
         val players = getPlayers(gameId)
 
-        val roundScore = getRoundScore(gameId)
-
-        roundScore.observe(this, Observer { roundScore ->
-            val roundScoreIterator = roundScore.listIterator()
-
-            while (roundScoreIterator.hasNext()) {
-                roundScoreList.add(roundScoreIterator.next())
-            }
-
-            roundRecyclerView.layoutManager = GridLayoutManager(applicationContext, playersNumber)
-            roundScoreAdapter = RoundScoreAdapter(applicationContext)
-            roundRecyclerView.adapter = roundScoreAdapter
-
-            roundScoreAdapter.setDataList(roundScoreList)
-        })
-
-        players.observe(this, Observer { player ->
-            playersNumber = player.size
-            val playerIterator = player.listIterator()
+        players.observe(this, Observer { players ->
+            playersNumber = players.size
+            val playerIterator = players.listIterator()
 
             //Round Header
             headerRecyclerView.layoutManager = GridLayoutManager(applicationContext, playersNumber)
@@ -123,7 +107,28 @@ class ScoreActivity : AppCompatActivity() {
             roundNumberAdapter.setDataList(roundNumberList)
 
             //Round Score
+            val roundScore = getRoundScore(gameId)
 
+            roundScore.observe(this, Observer { roundScore ->
+                if(roundScore.isEmpty()){
+                    for (i in 1..roundNumberList.size) {
+                        for (j in 1..playersNumber) {
+                            roundScoreList.add(RoundScore(0, 0))
+                        }
+                    }
+                } else {
+                    val roundScoreIterator = roundScore.listIterator()
+                    while (roundScoreIterator.hasNext()) {
+                        roundScoreList.add(roundScoreIterator.next())
+                    }
+                }
+
+                roundRecyclerView.layoutManager = GridLayoutManager(applicationContext, playersNumber)
+                roundScoreAdapter = RoundScoreAdapter(applicationContext)
+                roundRecyclerView.adapter = roundScoreAdapter
+
+                roundScoreAdapter.setDataList(roundScoreList)
+            })
         })
 
         playButton = findViewById<ImageButton>(R.id.playImageView)
