@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.appbar.AppBarLayout android:id="@+id/appBarLayout"
+<com.google.android.material.appbar.AppBarLayout
+    android:id="@+id/appBarLayout"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     app:layout_constraintEnd_toEndOf="parent"

@@ -40,7 +40,6 @@ class SavedGamesAdapter(var context: Context) : RecyclerView.Adapter<SavedGamesA
         val currentItem: GameWrapper = gamesList[position]
 
         holder.childRecyclerView.layoutManager = GridLayoutManager(context, currentItem.users.size)
-        holder.childRecyclerView.setHasFixedSize(true)
 
         val headerAdapter = HeaderAdapter(holder.childRecyclerView.context, true)
         headerAdapter.setDataList(currentItem.users)
