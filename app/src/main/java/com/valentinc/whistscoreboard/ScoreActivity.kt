@@ -37,7 +37,9 @@ class ScoreActivity : AppCompatActivity() {
 
     private var isGameStarted: Boolean = false
     private var currentRound: Int = 0
-    private var currentPlayer: Int = 0
+    private var currentPlayer: Int = -1
+    private var playerToStart: Int = 0
+    private var steps: Int = -1
     private var betIsDone: Boolean = false
     private var sumOfBets: Int = 0
     private var playersNumber: Int = 0
@@ -139,27 +141,25 @@ class ScoreActivity : AppCompatActivity() {
                 backButton.visibility = View.VISIBLE
             }
 
+            calculateCurrentPlayer()
+
             if(!betIsDone) {
                 lateinit var betDialogClass: BetDialogClass
-                if(currentPlayer == playersNumber - 1)
+
+                if(steps == playersNumber - 1)
                 {
-                    betDialogClass =
-                        BetDialogClass(this, roundNumberList[currentRound], userList[currentPlayer], sumOfBets)
+                    betDialogClass = BetDialogClass(this, roundNumberList[currentRound], userList[currentPlayer], sumOfBets)
                 }
                 else {
-                    betDialogClass =
-                        BetDialogClass(this, roundNumberList[currentRound], userList[currentPlayer])
+                    betDialogClass = BetDialogClass(this, roundNumberList[currentRound], userList[currentPlayer])
                 }
                 betDialogClass.show()
                 betDialogClass.onItemClick = { position ->
-                    roundScoreList[playersNumber * currentRound + currentPlayer].bet =
-                        position
+                    roundScoreList[playersNumber * currentRound + currentPlayer].bet = position
                     sumOfBets += position
                     roundScoreAdapter.notifyDataSetChanged()
 
-                    currentPlayer++
-                    if (currentPlayer == playersNumber) {
-                        currentPlayer = 0
+                    if (steps == playersNumber - 1) {
                         sumOfBets = 0
                         betIsDone = true
                     }
@@ -170,15 +170,17 @@ class ScoreActivity : AppCompatActivity() {
                 scoreDialogClass.onItemClick = { position ->
                     if(position) {
                         executePredictionTrue()
-
-                        handsDone++
+                        handsDone = handsDone + roundScoreList[playersNumber * currentRound + currentPlayer].bet
+                        calculateCurrentPlayer()
                         if(handsDone == roundNumberList[currentRound]) {
-                            while(currentPlayer!= 0 && currentPlayer < playersNumber){
+                            while(steps != 0 && steps < playersNumber) {
                                 if(roundScoreList[playersNumber * currentRound + currentPlayer].bet != 0)
                                     executePredictionFalse(0)
                                 else
                                     executePredictionTrue()
+                                calculateCurrentPlayer()
                             }
+                            betIsDone = false
                         }
                     }
                     else {
@@ -188,6 +190,13 @@ class ScoreActivity : AppCompatActivity() {
                         actualBetDialogClass.onItemClick = { position ->
                             executePredictionFalse(position)
                         }
+                    }
+                    if(steps == 0) {
+                        steps = -1
+                        handsDone = 0
+                        currentRound++
+                        betIsDone = false
+                        playerToStart++
                     }
                 }
             }
@@ -237,6 +246,19 @@ class ScoreActivity : AppCompatActivity() {
         }
     }
 
+    private fun calculateCurrentPlayer() {
+        if(steps == playersNumber - 1){
+            steps = 0
+
+            currentPlayer = playerToStart % playersNumber
+        } else {
+            currentPlayer = (currentPlayer + 1) % playersNumber
+            steps++
+        }
+
+        System.out.println(currentPlayer % playersNumber)
+    }
+
     private fun executePredictionTrue() {
         if (currentRound > 0)
             roundScoreList[playersNumber * currentRound + currentPlayer].score =
@@ -246,7 +268,7 @@ class ScoreActivity : AppCompatActivity() {
                 5 + roundScoreList[playersNumber * currentRound + currentPlayer].bet
         userList[currentPlayer].score = roundScoreList[playersNumber * currentRound + currentPlayer].score
         headerAdapter.notifyDataSetChanged()
-        finishRound()
+        roundScoreAdapter.notifyDataSetChanged()
     }
 
     private fun executePredictionFalse(actualPrediction: Int) {
@@ -264,19 +286,7 @@ class ScoreActivity : AppCompatActivity() {
 
         userList[currentPlayer].score = roundScoreList[playersNumber * currentRound + currentPlayer].score
         headerAdapter.notifyDataSetChanged()
-        finishRound()
-    }
-
-    private fun finishRound(){
         roundScoreAdapter.notifyDataSetChanged()
-
-        currentPlayer++
-        if (currentPlayer == playersNumber) {
-            currentPlayer = 0
-            currentRound++
-            betIsDone = false
-            handsDone = 0
-        }
     }
 
     fun getPlayers(gameId: UUID): LiveData<List<User>> {
