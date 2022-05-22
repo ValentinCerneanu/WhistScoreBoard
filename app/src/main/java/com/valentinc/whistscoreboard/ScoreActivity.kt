@@ -195,6 +195,8 @@ class ScoreActivity : AppCompatActivity() {
                         steps = -1
                         handsDone = 0
                         currentRound++
+                        roundNumberAdapter.currentRound = currentRound
+                        roundNumberAdapter.notifyDataSetChanged()
                         betIsDone = false
                         playerToStart++
                     }
