@@ -23,6 +23,7 @@ class AnswerDialogClass
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(R.layout.dialog_bet)
+        setCanceledOnTouchOutside(false)
 
         val predictionResultString = c.getString(R.string.prediction_result).format(playerName.name)
 

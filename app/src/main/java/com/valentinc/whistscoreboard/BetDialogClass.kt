@@ -25,6 +25,7 @@ class BetDialogClass
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(R.layout.dialog_bet)
+        setCanceledOnTouchOutside(false)
 
         var predictionString = ""
         if(isBetRound)
