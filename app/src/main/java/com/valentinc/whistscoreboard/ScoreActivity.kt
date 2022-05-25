@@ -230,12 +230,7 @@ class ScoreActivity : AppCompatActivity() {
                     playButton.setImageResource(R.drawable.icon_play)
                 }
             } else {
-                if (currentPlayer == 0) {
-                    currentPlayer = playersNumber
-                    betIsDone = true
-                    currentRound--
-                }
-                currentPlayer--
+                calculateLastPlayer()
                 roundScoreList[playersNumber * currentRound + currentPlayer].score = 0
                 roundScoreAdapter.notifyDataSetChanged()
 
@@ -246,6 +241,20 @@ class ScoreActivity : AppCompatActivity() {
                 headerAdapter.notifyDataSetChanged()
             }
         }
+    }
+
+    private fun calculateLastPlayer() {
+
+        if(steps == playersNumber - 1){
+            steps = playersNumber - 1
+
+            currentPlayer = playerToStart % playersNumber
+        } else {
+            currentPlayer = (currentPlayer - 1) % playersNumber
+            steps--
+        }
+
+        System.out.println(currentPlayer % playersNumber)
     }
 
     private fun calculateCurrentPlayer() {
