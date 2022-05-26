@@ -182,6 +182,8 @@ class ScoreActivity : AppCompatActivity() {
                             }
                             betIsDone = false
                         }
+                        if(steps == 0)
+                            finishRound()
                     }
                     else {
                         var actualBetDialogClass: BetDialogClass
@@ -189,16 +191,9 @@ class ScoreActivity : AppCompatActivity() {
                         actualBetDialogClass.show()
                         actualBetDialogClass.onItemClick = { position ->
                             executePredictionFalse(position)
+                            if(steps == playersNumber - 1)
+                                finishRound()
                         }
-                    }
-                    if(steps == 0) {
-                        steps = -1
-                        handsDone = 0
-                        currentRound++
-                        roundNumberAdapter.currentRound = currentRound
-                        roundNumberAdapter.notifyDataSetChanged()
-                        betIsDone = false
-                        playerToStart++
                     }
                 }
             }
@@ -241,6 +236,16 @@ class ScoreActivity : AppCompatActivity() {
                 headerAdapter.notifyDataSetChanged()
             }
         }
+    }
+
+    private fun finishRound(){
+        steps = -1
+        handsDone = 0
+        currentRound++
+        roundNumberAdapter.currentRound = currentRound
+        roundNumberAdapter.notifyDataSetChanged()
+        betIsDone = false
+        playerToStart++
     }
 
     private fun calculateLastPlayer() {
