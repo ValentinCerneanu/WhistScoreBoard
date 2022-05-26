@@ -253,7 +253,7 @@ class ScoreActivity : AppCompatActivity() {
         roundNumberAdapter.currentRound = currentRound
         roundNumberAdapter.notifyDataSetChanged()
         betIsDone = false
-        playerToStart++
+        playerToStart = (playerToStart + 1) % playersNumber
     }
 
     private fun calculateLastPlayer() {
