@@ -171,8 +171,8 @@ class ScoreActivity : AppCompatActivity() {
                     if(position) {
                         executePredictionTrue()
                         handsDone = handsDone + roundScoreList[playersNumber * currentRound + currentPlayer].bet
-                        calculateCurrentPlayer()
                         if(handsDone == roundNumberList[currentRound]) {
+                            calculateCurrentPlayer()
                             while(steps != 0 && steps < playersNumber) {
                                 if(roundScoreList[playersNumber * currentRound + currentPlayer].bet != 0)
                                     executePredictionFalse(0)
@@ -181,8 +181,9 @@ class ScoreActivity : AppCompatActivity() {
                                 calculateCurrentPlayer()
                             }
                             betIsDone = false
+                            finishRound()
                         }
-                        if(steps == 0)
+                        else if(steps == playersNumber - 1)
                             finishRound()
                     }
                     else {
