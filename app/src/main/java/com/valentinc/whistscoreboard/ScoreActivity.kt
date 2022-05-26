@@ -187,8 +187,15 @@ class ScoreActivity : AppCompatActivity() {
                             finishRound()
                     }
                     else {
-                        var actualBetDialogClass: BetDialogClass
-                        actualBetDialogClass = BetDialogClass(this, roundNumberList[currentRound], userList[currentPlayer], sumOfBets, false)
+
+                        var actualBetDialogClass: BetDialogClass = BetDialogClass(
+                            this,
+                            roundNumberList[currentRound],
+                            userList[currentPlayer],
+                            -1,
+                            false,
+                            roundScoreList[playersNumber * currentRound + currentPlayer].bet)
+
                         actualBetDialogClass.show()
                         actualBetDialogClass.onItemClick = { position ->
                             executePredictionFalse(position)

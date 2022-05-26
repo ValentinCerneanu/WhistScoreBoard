@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.dialog_bet.*
 
 
 class BetDialogClass
-    (var c: Activity, var roundNumber: Int, var playerName: User, var sumOfBets:Int = -1, var isBetRound:Boolean = true) : Dialog(c) {
+    (var c: Activity, var roundNumber: Int, var playerName: User, var sumOfBets:Int = -1, var isBetRound:Boolean = true, var wrongBet:Int = -1) : Dialog(c) {
 
     var d: Dialog? = null
 
@@ -34,15 +34,21 @@ class BetDialogClass
             predictionString= c.getString(R.string.prediction_result_explicit).format(playerName.name)
 
         prediction_textView.text = predictionString
-
-        if(sumOfBets != -1)
+        
+        if(!isBetRound){
             for (i in 0..roundNumber) {
-                predictions.add(Bet(i, i+sumOfBets != roundNumber))
+                predictions.add(Bet(i, i != wrongBet))
             }
-        else
-            for (i in 0..roundNumber) {
-                predictions.add(Bet(i))
-            }
+        } else {
+            if (sumOfBets != -1)
+                for (i in 0..roundNumber) {
+                    predictions.add(Bet(i, i + sumOfBets != roundNumber))
+                }
+            else
+                for (i in 0..roundNumber) {
+                    predictions.add(Bet(i))
+                }
+        }
 
         var numberOfColumns = roundNumber + 1
         if(numberOfColumns >= 3)
