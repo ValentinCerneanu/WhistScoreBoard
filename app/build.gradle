@@ -2,15 +2,16 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'com.google.gms.google-services'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 32
     buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.valentinc.whistscoreboard"
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 32
         versionCode 1
         versionName "1.0"
 
@@ -26,7 +27,7 @@ android {
 }
 
 dependencies {
-    def room_version = "2.3.0" // check latest version from docs
+    def room_version = "2.4.3" // check latest version from docs
     implementation "androidx.room:room-ktx:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
 
@@ -48,4 +49,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.2.0-alpha04'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-alpha04'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
+
+    implementation platform('com.google.firebase:firebase-bom:30.3.2')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
 }

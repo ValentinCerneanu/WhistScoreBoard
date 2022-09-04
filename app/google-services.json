@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "628955838947",
+    "firebase_url": "https://whistscoreboard-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "whistscoreboard",
+    "storage_bucket": "whistscoreboard.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:628955838947:android:e8813194b43719e7d748d6",
+        "android_client_info": {
+          "package_name": "com.valentinc.whistscoreboard"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "628955838947-u6h21q1p5r80d8h6acosp3ih046b9oul.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJ7rNcKbNLEL6syCBtufujpB17Z8NEVEo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "628955838947-u6h21q1p5r80d8h6acosp3ih046b9oul.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
